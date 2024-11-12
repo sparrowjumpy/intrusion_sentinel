@@ -31,5 +31,5 @@ def packet_handler(packet):
         print(f"Error in packet_handler: {e}")
 
 def start_sniffing():
-    sniffer = AsyncSniffer(prn=packet_handler, store=False, iface="eth0")
+    sniffer = AsyncSniffer(prn=packet_handler, store=False, iface="eth0")  # Replace "eth0" with your interface
     sniffer.start()
