@@ -1,0 +1,8 @@
+Flask
+Flask-SocketIO
+Flask-Login
+Flask-SQLAlchemy
+eventlet
+scapy
+Werkzeug
+pyshark
