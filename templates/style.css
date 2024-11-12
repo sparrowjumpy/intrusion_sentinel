@@ -1,0 +1,38 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+.alert {
+    background-color: #ff4c4c;
+    color: white;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+form {
+    text-align: center;
+    margin-top: 50px;
+}
+
+label, input {
+    display: block;
+    margin: auto;
+    width: 200px;
+    padding: 5px;
+}
+
+button {
+    margin-top: 10px;
+}
+
+.flash {
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+}
