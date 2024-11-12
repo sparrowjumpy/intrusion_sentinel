@@ -38,8 +38,8 @@ def load_malicious_lists():
         'https://www.spamhaus.org/drop/drop.txt',
     ]
     domain_feeds = [
-        'https://mirror.cedia.org.ec/malwaredomains/justdomains',
-        'https://s3.amazonaws.com/lists.disconnect.me/simple_malware.txt',
+        'https://openphish.com/feed.txt',
+        'https://phishing.army/download/phishing_army_blocklist_extended.txt',
     ]
     # Load malicious IPs
     for feed in ip_feeds:
