@@ -10,7 +10,7 @@ import threading
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
-socketio.init_app(app, async_mode='threading')  # Corrected line
+socketio.init_app(app, async_mode='eventlet')  # Use 'eventlet' as async_mode
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
