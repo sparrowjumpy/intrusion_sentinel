@@ -19,7 +19,6 @@ ICMP_FLOOD_THRESHOLD = 500      # Number of ICMP packets from a single IP
 TIMEFRAME = 60                  # Timeframe in seconds
 
 # Data structures for tracking
-login_attempts = defaultdict(list)
 dns_queries = defaultdict(list)
 arp_cache = {}
 dos_detect = defaultdict(int)
@@ -173,7 +172,7 @@ def detect_ssh_brute_force(packet):
         src_ip = packet[IP].src
         current_time = time.time()
 
-        if flags == 'S':  # SYN packet (connection attempt)
+        if 'S' in str(flags):  # SYN packet (connection attempt)
             ssh_login_attempts[src_ip].append(current_time)
             ssh_login_attempts[src_ip] = [t for t in ssh_login_attempts[src_ip] if current_time - t < TIMEFRAME]
             if len(ssh_login_attempts[src_ip]) > BRUTE_FORCE_THRESHOLD:
@@ -188,7 +187,7 @@ def detect_ftp_brute_force(packet):
         src_ip = packet[IP].src
         current_time = time.time()
 
-        if flags == 'S':  # SYN packet (connection attempt)
+        if 'S' in str(flags):  # SYN packet (connection attempt)
             ftp_login_attempts[src_ip].append(current_time)
             ftp_login_attempts[src_ip] = [t for t in ftp_login_attempts[src_ip] if current_time - t < TIMEFRAME]
             if len(ftp_login_attempts[src_ip]) > BRUTE_FORCE_THRESHOLD:
