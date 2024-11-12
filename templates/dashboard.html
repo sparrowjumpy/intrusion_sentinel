@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - Intrusion Sentinel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Intrusion Sentinel Dashboard</h1>
+    <p>Welcome, {{ current_user.username }} | <a href="{{ url_for('logout') }}">Logout</a></p>
+    <div>
+        <canvas id="attackChart"></canvas>
+    </div>
+    <div id="alerts">
+        {% for alert in alerts %}
+            <div class="alert">
+                <strong>{{ alert.timestamp }}</strong> - {{ alert.alert_type }} from {{ alert.source_ip }}: {{ alert.details }}
+            </div>
+        {% endfor %}
+    </div>
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        socket.on('new_alert', function(data) {
+            var alertsDiv = document.getElementById('alerts');
+            var newAlert = document.createElement('div');
+            newAlert.className = 'alert';
+            var now = new Date().toISOString();
+            newAlert.innerHTML = '<strong>' + now + '</strong> - ' + data.message;
+            alertsDiv.insertBefore(newAlert, alertsDiv.firstChild);
+            updateChart();
+        });
+
+        var ctx = document.getElementById('attackChart').getContext('2d');
+        var attackChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [], // Timestamps
+                datasets: [{
+                    label: 'Number of Attacks',
+                    data: [],
+                    borderColor: 'rgba(255,99,132,1)',
+                    fill: false,
+                }]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        type: 'time',
+                        time: {
+                            unit: 'minute',
+                            tooltipFormat: 'MMM D, h:mm a'
+                        },
+                        distribution: 'series'
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+
+        function updateChart() {
+            fetch('/chart-data')
+                .then(response => response.json())
+                .then(data => {
+                    attackChart.data.labels = data.timestamps;
+                    attackChart.data.datasets[0].data = data.values;
+                    attackChart.update();
+                });
+        }
+
+        updateChart();
+    </script>
+</body>
+</html>
