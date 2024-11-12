@@ -1,16 +1,16 @@
 from flask import Flask, render_template, redirect, url_for, request, jsonify, flash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from flask_socketio import SocketIO
 from config import Config
 from models import db, User, Alert
 from ids.sniffing import start_sniffing
+from ids.utils import socketio  # Import socketio from ids/utils.py
 from datetime import datetime, timedelta
 import threading
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
-socketio = SocketIO(app, async_mode='threading')
+socketio.init_app(app, async_mode='threading', app=app)  # Initialize socketio with app
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
@@ -52,7 +52,6 @@ def chart_data():
     # Fetch data for the last hour
     one_hour_ago = datetime.utcnow() - timedelta(hours=1)
     alerts = Alert.query.filter(Alert.timestamp >= one_hour_ago).all()
-    timestamps = [alert.timestamp.isoformat() for alert in alerts]
     alert_counts = {}
     for alert in alerts:
         key = alert.timestamp.strftime('%Y-%m-%d %H:%M')
