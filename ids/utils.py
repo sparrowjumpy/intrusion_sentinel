@@ -1,7 +1,8 @@
 from flask_socketio import SocketIO
 from models import db, Alert
 from datetime import datetime
-from app import socketio
+
+socketio = SocketIO()  # Initialize SocketIO here
 
 def notify_ui(message):
     socketio.emit('new_alert', {'message': message})
